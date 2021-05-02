@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Inventory.Models.MyStock>
+@{
+    Layout = null;
+}
+
+<script>
+    function deletedata(id,invoice)
+    {
+        alert(id);
+        var conf = confirm("Are you sure");
+        if(conf==true)
+        {
+            $.ajax({
+                url: "Delete_Item",
+                type: 'POST',
+                data: { id: id },
+
+                success: function ($data) {
+                    $("#show").html($data);
+                }
+            });
+            $.ajax({
+                url: "Show_After_Delete",
+                type: 'POST',
+                data: { invoice: invoice },
+
+                success: function ($data) {
+                    $("#show").html($data);
+                }
+            });
+        }
+    }
+</script>
+
+<table class="table">
+    <tr style="background-color:#fb6d6d">
+        <th>sr.no</th>
+        <th>Item Name</th>
+        <th>Quantity</th>
+        <th>Amount</th>
+        <th>Action</th>
+    </tr>
+
+
+    @{ int sr = 1;}
+    @foreach (var m in Model)
+    {
+
+        <tr>
+            <td>@sr</td>
+            <td>@m.item_name</td>
+            <td>@m.quantity</td>
+            <td>@m.total_price_per_item</td>
+
+            <td><button type="button" onclick="deletedata(@m.id,@m.invoice)">Delete</button></td>
+        </tr>
+                @(sr += 1)
+    }
+
+</table><br />
+
+
+<div id="show">
+
+
+</div>
